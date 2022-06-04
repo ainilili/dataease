@@ -1,0 +1,54 @@
+version: '2.1'
+services:
+
+  doris-fe:
+    image: registry.cn-qingdao.aliyuncs.com/dataease/doris:0.15
+    container_name: doris-fe
+    ports:
+      - 8030:8030
+      - 9030:9030
+    environment:
+      - DORIS_ROLE=fe-leader
+    volumes:
+      - /opt/dataease/data/fe:/opt/doris/fe/doris-meta
+      - /opt/dataease/logs/fe:/opt/doris/fe/log
+      - /opt/dataease/conf/fe.conf:/opt/doris/fe/conf/fe.conf
+    networks:
+      dataease-network:
+        ipv4_address: 172.88.0.198
+    restart: always
+
+  doris-be:
+    image: registry.cn-qingdao.aliyuncs.com/dataease/doris:0.15
+    container_name: doris-be
+    environment:
+      - DORIS_ROLE=be
+    volumes:
+      - /opt/dataease/data/be:/opt/doris/be/storage
+      - /opt/dataease/logs/be:/opt/doris/be/log
+      - /opt/dataease/conf/be.conf:/opt/doris/be/conf/be.conf
+    networks:
+      dataease-network:
+        ipv4_address: 172.88.0.199
+    restart: always
+
+  kettle:
+    image: registry.cn-qingdao.aliyuncs.com/dataease/kettle:8.3-v1.2
+    container_name: kettle
+    ports:
+      - 18080:18080
+    volumes:
+      - /opt/dataease/conf/:/opt/dataease/conf
+      - /opt/dataease/data/kettle:/opt/dataease/data/kettle
+    networks:
+      - dataease-network
+    restart: always
+
+networks:
+  dataease-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.88.0.0/16
+          gateway: 172.88.0.1

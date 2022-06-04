@@ -112,40 +112,7 @@ public class HttpClientUtil {
      * @return 响应结果字符串
      */
     public static String post(String url, String json, HttpClientConfig config) {
-        CloseableHttpClient httpClient = buildHttpClient(url);
-        HttpPost httpPost = new HttpPost(url);
-        if (config == null) {
-            config = new HttpClientConfig();
-        }
-        try {
-            httpPost.setConfig(config.buildRequestConfig());
-
-            Map<String, String> header = config.getHeader();
-            for (String key : header.keySet()) {
-                httpPost.addHeader(key, header.get(key));
-            }
-            httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
-            httpPost.addHeader(HTTP.CONTENT_ENCODING, config.getCharset());
-
-            EntityBuilder entityBuilder = EntityBuilder.create();
-            entityBuilder.setText(json);
-            entityBuilder.setContentType(ContentType.APPLICATION_JSON);
-            entityBuilder.setContentEncoding(config.getCharset());
-            HttpEntity requestEntity = entityBuilder.build();
-            httpPost.setEntity(requestEntity);
-
-            HttpResponse response = httpClient.execute(httpPost);
-            return getResponseStr(response, config);
-        } catch (Exception e) {
-            logger.error("HttpClient查询失败", e);
-            throw new RuntimeException("HttpClient查询失败: " + e.getMessage());
-        } finally {
-            try {
-                httpClient.close();
-            } catch (Exception e) {
-                logger.error("HttpClient关闭连接失败", e);
-            }
-        }
+        return HttpUtil.doPost(url, json, config);
     }
 
     /**
