@@ -38,8 +38,7 @@ services:
     ports:
       - 18080:18080
     volumes:
-      - /opt/dataease/conf/:/opt/dataease/conf
-      - /opt/dataease/data/kettle:/opt/dataease/data/kettle
+      - /opt/dataease:/opt/dataease
     networks:
       - dataease-network
     restart: always
