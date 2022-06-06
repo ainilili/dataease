@@ -12,6 +12,7 @@ services:
     volumes:
       - /Users/nico/workspace/soft/dataease/backend/target:/opt/apps
       - /opt/dataease/conf:/opt/dataease/conf
+      - /opt/dataease/data/kettle:/opt/dataease/data/kettle
     ports:
       - 8081:8081
     networks:
